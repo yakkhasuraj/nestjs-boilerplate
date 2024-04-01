@@ -51,6 +51,12 @@ export class CatsController {
     return `This action updates a #${id} cat`;
   }
 
+  @Put(':id/:name')
+  name(@Param('id') id: string, @Body() updateCatDto: CreateCatDto) {
+    console.log(updateCatDto);
+    return `This action updates a #${id} cat`;
+  }
+
   @Delete(':id')
   remove(@Param('id') id: string) {
     return `This action removes a #${id} cat`;
