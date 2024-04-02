@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
   Param,
   Post,
@@ -26,7 +27,11 @@ export class CatsController {
   // Redirect a response to a specific URL using a @Redirect() decorator
   // @Redirect('/', 301)
   async findAll(): Promise<Cat[]> {
-    return this.catsService.findAll();
+    // return this.catsService.findAll();
+
+    // Send standard HTTP response objects when error occurs
+    // throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    throw new ForbiddenException();
   }
 
   // Routes with parameters should be declared after any static paths
@@ -41,8 +46,11 @@ export class CatsController {
 
   // Specify a custom response header using a @Header() decorator
   // @Header('Cache-Control', 'none')
+  // Prefer applying filters by using classes instead of instances when possible
+  // @UseFilters(new HttpExceptionFilter())
   create(@Body() createCatDto: CreateCatDto) {
     this.catsService.create(createCatDto);
+    // throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
   }
 
   @Put(':id')
