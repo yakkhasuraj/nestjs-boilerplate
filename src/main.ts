@@ -14,6 +14,8 @@ async function bootstrap() {
   // Create a global-scoped filter
   // `useGlobalFilters()` method does not set up filters for gateways or hybrid applications
   // app.useGlobalFilters(new HttpExceptionFilter());
+  // Setup a global-scoped pipe
+  // app.useGlobalPipes(new ValidationPipe());
 
   await app.listen(3000);
 }
