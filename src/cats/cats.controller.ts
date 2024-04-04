@@ -10,17 +10,22 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
 import { CatsService } from './cats.service';
 import { CreateCatDto } from './dto/create-cat.dto';
 import { Cat } from './interfaces/cat.interface';
 import { ParseIntPipe } from 'src/common/pipe/parse-int.pipe';
+import { RolesGuard } from 'src/common/guard/role.guard';
+import { Roles } from 'src/common/decorator/roles.decorator';
 
 // To create a controller using the CLI, simply execute the `nest g controller cats` command
 // Fastify lacks support for nested routers
 // @Controller({ host: 'example.com' })
 @Controller('cats')
+// Guards are executed after all middleware, but before any interceptor or pipe
+@UseGuards(RolesGuard)
 export class CatsController {
   // If your class doesn't extend another class, you should always prefer using constructor-based injection
   constructor(private catsService: CatsService) {}
@@ -31,6 +36,7 @@ export class CatsController {
 
   // Redirect a response to a specific URL using a @Redirect() decorator
   // @Redirect('/', 301)
+  // @UseGuards(RolesGuard)
   async findAll(
     // Provide default values
     @Query('activeOnly', new DefaultValuePipe(false), ParseBoolPipe)
@@ -56,6 +62,7 @@ export class CatsController {
   }
 
   @Post()
+  @Roles(['admin'])
   // Change default status code by adding the @HttpCode(...) decorator at a handler level
   // @HttpCode(204)
 

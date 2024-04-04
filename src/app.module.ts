@@ -5,12 +5,13 @@ import {
   RequestMethod,
   ValidationPipe,
 } from '@nestjs/common';
-import { APP_FILTER, APP_PIPE } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD, APP_PIPE } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CatsModule } from './cats/cats.module';
 import { HttpExceptionFilter } from './common/exception/http-exception.filter';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
+import { RolesGuard } from './common/guard/role.guard';
 
 @Module({
   imports: [CatsModule],
@@ -26,6 +27,11 @@ import { LoggerMiddleware } from './common/middleware/logger.middleware';
     {
       provide: APP_PIPE,
       useClass: ValidationPipe,
+    },
+    // Setup global-scope guard with dependency injection
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
     },
   ],
 })

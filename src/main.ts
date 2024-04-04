@@ -16,6 +16,8 @@ async function bootstrap() {
   // app.useGlobalFilters(new HttpExceptionFilter());
   // Setup a global-scoped pipe
   // app.useGlobalPipes(new ValidationPipe());
+  // Setup a global-scoped guard
+  // app.useGlobalGuards(new RolesGuard());
 
   await app.listen(3000);
 }
