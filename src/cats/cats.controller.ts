@@ -3,29 +3,29 @@ import {
   Controller,
   DefaultValuePipe,
   Delete,
-  ForbiddenException,
   Get,
   Param,
   ParseBoolPipe,
   Post,
   Put,
   Query,
-  UseGuards,
+  UseInterceptors,
   ValidationPipe,
 } from '@nestjs/common';
+import { TransformInterceptor } from 'src/common/interceptor/transform.interceptor';
+import { ParseIntPipe } from 'src/common/pipe/parse-int.pipe';
 import { CatsService } from './cats.service';
 import { CreateCatDto } from './dto/create-cat.dto';
 import { Cat } from './interfaces/cat.interface';
-import { ParseIntPipe } from 'src/common/pipe/parse-int.pipe';
-import { RolesGuard } from 'src/common/guard/role.guard';
-import { Roles } from 'src/common/decorator/roles.decorator';
 
 // To create a controller using the CLI, simply execute the `nest g controller cats` command
 // Fastify lacks support for nested routers
 // @Controller({ host: 'example.com' })
 @Controller('cats')
 // Guards are executed after all middleware, but before any interceptor or pipe
-@UseGuards(RolesGuard)
+// @UseGuards(RolesGuard)
+// Bind extra logic before / after method execution
+// @UseInterceptors(LoggingInterceptor)
 export class CatsController {
   // If your class doesn't extend another class, you should always prefer using constructor-based injection
   constructor(private catsService: CatsService) {}
@@ -37,6 +37,8 @@ export class CatsController {
   // Redirect a response to a specific URL using a @Redirect() decorator
   // @Redirect('/', 301)
   // @UseGuards(RolesGuard)
+  // Transform the result returned from a function
+  @UseInterceptors(TransformInterceptor)
   async findAll(
     // Provide default values
     @Query('activeOnly', new DefaultValuePipe(false), ParseBoolPipe)
@@ -44,11 +46,11 @@ export class CatsController {
     @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
   ): Promise<Cat[]> {
     console.log(activeOnly, page);
-    // return this.catsService.findAll();
+    return this.catsService.findAll();
 
     // Send standard HTTP response objects when error occurs
     // throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
-    throw new ForbiddenException();
+    // throw new ForbiddenException();
   }
 
   // Routes with parameters should be declared after any static paths
@@ -62,7 +64,7 @@ export class CatsController {
   }
 
   @Post()
-  @Roles(['admin'])
+  // @Roles(['admin'])
   // Change default status code by adding the @HttpCode(...) decorator at a handler level
   // @HttpCode(204)
 

@@ -5,13 +5,15 @@ import {
   RequestMethod,
   ValidationPipe,
 } from '@nestjs/common';
-import { APP_FILTER, APP_GUARD, APP_PIPE } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CatsModule } from './cats/cats.module';
 import { HttpExceptionFilter } from './common/exception/http-exception.filter';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { RolesGuard } from './common/guard/role.guard';
+import { LoggingInterceptor } from './common/interceptor/logging.interceptor';
+import { ErrorsInterceptor } from './common/interceptor/errors.interceptor';
 
 @Module({
   imports: [CatsModule],
@@ -32,6 +34,15 @@ import { RolesGuard } from './common/guard/role.guard';
     {
       provide: APP_GUARD,
       useClass: RolesGuard,
+    },
+    // Setup global-scope interceptor with dependency injection
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ErrorsInterceptor,
     },
   ],
 })

@@ -18,6 +18,8 @@ async function bootstrap() {
   // app.useGlobalPipes(new ValidationPipe());
   // Setup a global-scoped guard
   // app.useGlobalGuards(new RolesGuard());
+  // Setup a global-scoped interceptor
+  // app.useGlobalInterceptors(new LoggingInterceptor());
 
   await app.listen(3000);
 }
