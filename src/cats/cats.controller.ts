@@ -59,7 +59,11 @@ export class CatsController {
   // Makes code more declarative and DRY by abstracting boilerplate code out
   // findOne(@Param('id', UserByIdPipe) userEntity: UserEntity) {
   // Transform or Validate arguments
-  findOne(@Param('id', ParseIntPipe) id: string): string {
+  findOne(
+    @Param('id', ParseIntPipe) id: string,
+    // @User() user: UserEntity,
+  ): string {
+    // console.log(user);
     return `This action returns a #${id} cat`;
   }
 
